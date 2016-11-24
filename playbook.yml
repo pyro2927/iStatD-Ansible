@@ -11,7 +11,7 @@
         - libsensors4-dev
         - libavahi-common-dev
         - libavahi-client-dev
-    - stat: path=/user/local/bin/istatserver
+    - stat: path=/usr/local/bin/istatserver
       register: istatbin
     - get_url: url="https://s3.amazonaws.com/bjango/files/istatserverlinux/istatserver-3.01.tar.gz" dest=/tmp
       when: istatbin.stat.exists == False
