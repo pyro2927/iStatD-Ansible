@@ -1,0 +1,30 @@
+---
+- hosts: all
+  tasks:
+    - apt: name={{item}} update_cache=yes
+      with_items:
+        - g++
+        - autoconf
+        - libxml2-dev
+        - libssl-dev
+        - libsqlite3-dev
+        - libsensors4-dev
+        - libavahi-common-dev
+        - libavahi-client-dev
+    - stat: path=/user/local/bin/istatserver
+      register: istatbin
+    - get_url: url="https://s3.amazonaws.com/bjango/files/istatserverlinux/istatserver-3.01.tar.gz" dest=/tmp
+      when: istatbin.stat.exists == False
+    - command: tar xvzf /tmp/istatserver-3.01.tar.gz
+      args:
+        chdir: /tmp
+      when: istatbin.stat.exists == False
+    - shell: "./autogen && ./configure && make && make install"
+      args:
+        chdir: /tmp/istatserver-3.01
+      when: istatbin.stat.exists == False
+    - shell: "ps aux | grep istatserver | grep -v grep"
+      ignore_errors: yes
+      register: istatproc
+    - command: "/usr/local/bin/istatserver -d"
+      when: istatproc.rc != 0
