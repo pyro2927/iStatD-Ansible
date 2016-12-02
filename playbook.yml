@@ -3,14 +3,15 @@
   tasks:
     - apt: name={{item}} update_cache=yes
       with_items:
-        - g++
         - autoconf
-        - libxml2-dev
-        - libssl-dev
-        - libsqlite3-dev
-        - libsensors4-dev
-        - libavahi-common-dev
+        - build-essential
+        - g++
         - libavahi-client-dev
+        - libavahi-common-dev
+        - libsensors4-dev
+        - libsqlite3-dev
+        - libssl-dev
+        - libxml2-dev
     - stat: path=/usr/local/bin/istatserver
       register: istatbin
     - get_url: url="https://s3.amazonaws.com/bjango/files/istatserverlinux/istatserver-3.01.tar.gz" dest=/tmp
